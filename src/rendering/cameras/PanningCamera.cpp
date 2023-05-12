@@ -13,6 +13,8 @@ PanningCamera::PanningCamera(float distance, glm::vec3 focus_point, float pitch,
     : init_distance(distance), init_focus_point(focus_point), init_pitch(pitch), init_yaw(yaw), init_near(near), init_fov(fov), distance(distance), focus_point(focus_point), pitch(pitch), yaw(yaw), near(near), fov(fov) {}
 
 void PanningCamera::update(const Window& window, float dt, bool controls_enabled) {
+    glm :: mat4 rotYMat = glm::rotate(yaw, glm::vec3{inverse_view_matrix[1]});
+    glm :: mat4 rotXMat = glm::rotate(pitch, glm::vec3{inverse_view_matrix[0]});
     if (controls_enabled) {
         bool ctrl_is_pressed = window.is_key_pressed(GLFW_KEY_LEFT_CONTROL) || window.is_key_pressed(GLFW_KEY_RIGHT_CONTROL);
 
@@ -26,6 +28,7 @@ void PanningCamera::update(const Window& window, float dt, bool controls_enabled
             // Extract basis vectors from inverse view matrix to find world space directions of view space basis
             auto x_basis = glm::vec3{inverse_view_matrix[0]};
             auto y_basis = glm::vec3{inverse_view_matrix[1]};
+            
 
             auto pan = window.get_mouse_delta(GLFW_MOUSE_BUTTON_MIDDLE);
             focus_point += (x_basis * (float) -pan.x + y_basis * (float) pan.y) * PAN_SPEED * dt * distance / (float) window.get_window_height();
@@ -37,18 +40,24 @@ void PanningCamera::update(const Window& window, float dt, bool controls_enabled
             auto is_dragging = window.is_mouse_pressed(GLFW_MOUSE_BUTTON_RIGHT) || window.is_mouse_pressed(GLFW_MOUSE_BUTTON_MIDDLE);
             if (is_dragging) {
                 window.set_cursor_disabled(true);
+
             }
         }
-    }
 
+    }
+    
     yaw = std::fmod(yaw + YAW_PERIOD, YAW_PERIOD);
     pitch = clamp(pitch, PITCH_MIN, PITCH_MAX);
     distance = clamp(distance, MIN_DISTANCE, MAX_DISTANCE);
+    glm::mat4 x_rotation = glm::rotate(-pitch, glm::vec3{1.0f, 0.0f, 0.0f});
+    glm::mat4 y_rotation = glm::rotate(-yaw, glm::vec3{0.0f, 1.0f, 0.0f});
 
-    view_matrix = glm::translate(glm::vec3{0.0f, 0.0f, -distance});
+
+    
+    view_matrix = glm::translate(glm::vec3{0.0f, 0.0f, -distance}) * x_rotation * y_rotation * glm::translate(focus_point);
     inverse_view_matrix = glm::inverse(view_matrix);
 
-    projection_matrix = glm::infinitePerspective(fov, window.get_framebuffer_aspect_ratio(), 1.0f);
+    projection_matrix = glm::infinitePerspective(fov, window.get_framebuffer_aspect_ratio(), near);
     inverse_projection_matrix = glm::inverse(projection_matrix);
 }
 
