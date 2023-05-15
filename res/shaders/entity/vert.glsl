@@ -21,6 +21,7 @@ uniform vec3 specular_tint;
 uniform vec3 ambient_tint;
 uniform float shininess;
 
+
 // Light Data
 #if NUM_PL > 0
 layout (std140) uniform PointLightArray {
