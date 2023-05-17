@@ -30,17 +30,26 @@ const float ambient_factor = 0.002f;
 void point_light_calculation(PointLightData point_light, LightCalculatioData calculation_data, float shininess, inout vec3 total_diffuse, inout vec3 total_specular, inout vec3 total_ambient) {
     vec3 ws_light_offset = point_light.position - calculation_data.ws_frag_position;
 
+	// Distance between frag and light
+	float distance = distance(point_light.position, calculation_data.ws_frag_position);
+
+	// Attenuation factor
+	float a = 0.5;
+	float b = 0.3;
+	float c = 1.0;
+	float attenuation_factor = 1 / (a + b * distance + c * distance * distance);
+
     // Ambient
     vec3 ambient_component = ambient_factor * point_light.colour;
 
     // Diffuse
     vec3 ws_light_dir = normalize(ws_light_offset);
-    float diffuse_factor = max(dot(ws_light_dir, calculation_data.ws_normal), 0.0f);
+    float diffuse_factor = max(dot(ws_light_dir, calculation_data.ws_normal), 0.0f) * attenuation_factor;
     vec3 diffuse_component = diffuse_factor * point_light.colour;
 
     // Specular
     vec3 ws_halfway_dir = normalize(ws_light_dir + calculation_data.ws_view_dir);
-    float specular_factor = pow(max(dot(calculation_data.ws_normal, ws_halfway_dir), 0.0f), shininess);
+    float specular_factor = pow(max(dot(calculation_data.ws_normal, ws_halfway_dir), 0.0f), shininess) * attenuation_factor;
     vec3 specular_component = specular_factor * point_light.colour;
 
     total_diffuse += diffuse_component;
