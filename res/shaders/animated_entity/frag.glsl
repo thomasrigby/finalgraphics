@@ -15,7 +15,7 @@ uniform mat3 normal_matrix;
 
 // Global Data
 uniform float inverse_gamma;
-
+uniform float textureScale;
 uniform sampler2D diffuse_texture;
 uniform sampler2D specular_map_texture;
 
@@ -55,7 +55,7 @@ void main() {
 		resolve_textured_light_calculation(lighting_result,
 		                                   diffuse_texture,
 		                                   specular_map_texture,
-		                                   frag_in.texture_coordinate);
+		                                   frag_in.texture_coordinate*textureScale);
 
     out_colour = vec4(resolved_lighting, 1.0f);
     out_colour.rgb = pow(out_colour.rgb, vec3(inverse_gamma));

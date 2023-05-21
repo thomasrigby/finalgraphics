@@ -7,6 +7,8 @@
 #include "utility/Math.h"
 #include "rendering/imgui/ImGuiManager.h"
 
+const float PAN_AROUND_SPEED = 0.1f;  // Add this line to define the speed of panning around
+
 PanningCamera::PanningCamera() : distance(init_distance), focus_point(init_focus_point), pitch(init_pitch), yaw(init_yaw), near(init_near), fov(init_fov) {}
 
 PanningCamera::PanningCamera(float distance, glm::vec3 focus_point, float pitch, float yaw, float near, float fov)
@@ -17,6 +19,7 @@ void PanningCamera::update(const Window& window, float dt, bool controls_enabled
     glm :: mat4 rotXMat = glm::rotate(pitch, glm::vec3{inverse_view_matrix[0]});
     if (controls_enabled) {
         bool ctrl_is_pressed = window.is_key_pressed(GLFW_KEY_LEFT_CONTROL) || window.is_key_pressed(GLFW_KEY_RIGHT_CONTROL);
+        bool pan_around_is_pressed = window.is_key_pressed(GLFW_KEY_S);
 
         bool resetSeq = false;
         if (window.was_key_pressed(GLFW_KEY_R) && !ctrl_is_pressed) {
@@ -36,6 +39,11 @@ void PanningCamera::update(const Window& window, float dt, bool controls_enabled
             pitch -= PITCH_SPEED * (float) window.get_mouse_delta(GLFW_MOUSE_BUTTON_RIGHT).y;
             yaw -= YAW_SPEED * (float) window.get_mouse_delta(GLFW_MOUSE_BUTTON_RIGHT).x;
             distance -= ZOOM_SCROLL_MULTIPLIER * ZOOM_SPEED * window.get_scroll_delta();
+
+            // Pan around the scene if 's' is pressed.
+            if (pan_around_is_pressed) {
+                yaw += PAN_AROUND_SPEED * dt;
+            }
 
             auto is_dragging = window.is_mouse_pressed(GLFW_MOUSE_BUTTON_RIGHT) || window.is_mouse_pressed(GLFW_MOUSE_BUTTON_MIDDLE);
             if (is_dragging) {
@@ -58,6 +66,7 @@ void PanningCamera::update(const Window& window, float dt, bool controls_enabled
     projection_matrix = glm::infinitePerspective(fov, window.get_framebuffer_aspect_ratio(), near);
     inverse_projection_matrix = glm::inverse(projection_matrix);
 }
+
 
 void PanningCamera::reset() {
     distance = init_distance;
