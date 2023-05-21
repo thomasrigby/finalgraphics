@@ -31,6 +31,9 @@ uniform vec3 ws_view_position;
 layout (std140) uniform PointLightArray {
     PointLightData point_lights[NUM_PL];
 };
+layout (std140) uniform DirectionalLightArray {
+    DirectionalLightData directional_lights[NUM_PL];
+};
 #endif
 
 void main() {
@@ -47,6 +50,7 @@ void main() {
 	                            material
 								#if NUM_PL > 0
 								,point_lights
+                ,directional_lights
 								#endif
 								);
 
