@@ -7,7 +7,7 @@
 #include "utility/Math.h"
 #include "rendering/imgui/ImGuiManager.h"
 
-const float PAN_AROUND_SPEED = 0.1f;  // Add this line to define the speed of panning around
+const float PAN_AROUND_SPEED = 1.0f;  // Add this line to define the speed of panning around
 
 PanningCamera::PanningCamera() : distance(init_distance), focus_point(init_focus_point), pitch(init_pitch), yaw(init_yaw), near(init_near), fov(init_fov) {}
 
