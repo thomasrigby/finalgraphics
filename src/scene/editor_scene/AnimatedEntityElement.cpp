@@ -5,6 +5,7 @@
 #include "rendering/imgui/ImGuiManager.h"
 #include "scene/SceneContext.h"
 
+//Add 1,0 for default animatedentityelement rendering 
 std::unique_ptr<EditorScene::AnimatedEntityElement> EditorScene::AnimatedEntityElement::new_default(const SceneContext& scene_context, ElementRef parent) {
     auto rendered_entity = AnimatedEntityRenderer::Entity::create(
         scene_context.model_loader.load_hierarchy_from_file<AnimatedEntityRenderer::VertexData>("cube.obj"),
