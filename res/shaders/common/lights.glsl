@@ -70,8 +70,9 @@ void point_light_calculation(PointLightData point_light, LightCalculatioData cal
 // Directional Lights
 void directional_light_calculation(DirectionalLightData directional_light, LightCalculatioData calculation_data, float shininess, inout vec3 total_diffuse, inout vec3 total_specular, inout vec3 total_ambient) {
     vec3 ws_light_offset = directional_light.position - calculation_data.ws_frag_position;
-    vec3 light_dir = normalize(-directional_light.direction);
-    //vec3 light_dir = normalize(vec3(1.0f, 1.0f, 0.0f));
+    //vec3 light_dir = normalize(directional_light.direction);
+    vec3 light_dir = normalize(vec3(1.0f, 1.0f, 0.0f));
+    
 
     // Ambient
     vec3 ambient_component = ambient_factor * directional_light.colour;

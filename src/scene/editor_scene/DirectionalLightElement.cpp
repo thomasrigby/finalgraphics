@@ -11,6 +11,7 @@ std::unique_ptr<EditorScene::DirectionalLightElement> EditorScene::DirectionalLi
 		parent,
 		"New Directional Light",
 		glm::vec3{0.0f, 1.0f, 0.0f},
+		glm::vec3{1.0f, 1.0f, 0.0f},
 		DirectionalLight::create(
 			glm::vec3{}, // Set via update_instance_data()
 			glm::vec4{1.0f}
@@ -72,7 +73,7 @@ void EditorScene::DirectionalLightElement::add_imgui_edit_section(MasterRenderSc
     ImGui::DragFloat("Intensity", &light->colour.a, 0.01f, 0.0f, FLT_MAX);
     ImGui::DragDisableCursor(scene_context.window);
 
-	ImGui::Text("Direction Transformation");
+	ImGui::Text("Direction");
 	transformUpdated |= ImGui::DragFloat3("Direction", &direction[0], 0.01f);
     ImGui::DragDisableCursor(scene_context.window);
     ImGui::Spacing();
