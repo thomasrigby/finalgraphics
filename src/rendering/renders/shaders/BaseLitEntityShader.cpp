@@ -6,8 +6,8 @@ BaseLitEntityShader::BaseLitEntityShader(std::string name, const std::string& ve
                                          std::unordered_map<std::string, std::string> vert_defines,
                                          std::unordered_map<std::string, std::string> frag_defines) :
     BaseEntityShader(std::move(name), vertex_path, fragment_path, std::move(vert_defines), std::move(frag_defines)),
-    point_lights_ubo({}, false) {
-
+    point_lights_ubo({}, false), 
+    directional_lights_ubo({}, false) {
     get_uniforms_set_bindings();
 }
 
@@ -64,7 +64,7 @@ void BaseLitEntityShader::set_point_lights(const std::vector<PointLight>& point_
 }
 
 void BaseLitEntityShader::set_directional_lights(const std::vector<DirectionalLight>& directional_lights) {
-    uint count = std::min(MAX_PL, (uint) directional_lights.size());
+    uint count = std::min(MAX_DL, (uint) directional_lights.size());
 
     for (uint i = 0; i < count; i++) {
         const DirectionalLight& directional_light = directional_lights[i];

@@ -126,7 +126,7 @@ LightingResult total_light_calculation(LightCalculatioData light_calculation_dat
 
     #if NUM_DL > 0
     for (int i = 0; i < NUM_DL; i++) {
-        directional_light_calculation(directional_lights[i], light_calculation_data, material.shininess, total_diffuse, total_specular, total_ambient);
+        //directional_light_calculation(directional_lights[i], light_calculation_data, material.shininess, total_diffuse, total_specular, total_ambient);
     }
     #endif
     
