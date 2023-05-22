@@ -38,6 +38,7 @@ std::unique_ptr<EditorScene::DirectionalLightElement> EditorScene::DirectionalLi
 
 	light_element->position = j["position"];
     light_element->light->colour = j["colour"];
+    light_element->direction = j["direction"];
     light_element->visible = j["visible"];
     light_element->visual_scale = j["visual_scale"];
 
@@ -49,6 +50,7 @@ json EditorScene::DirectionalLightElement::into_json() const {
     return {
         {"position",     position},
         {"colour",       light->colour},
+        {"direction",    direction},
         {"visible",      visible},
         {"visual_scale", visual_scale},
     };
@@ -69,6 +71,11 @@ void EditorScene::DirectionalLightElement::add_imgui_edit_section(MasterRenderSc
     ImGui::Spacing();
     ImGui::DragFloat("Intensity", &light->colour.a, 0.01f, 0.0f, FLT_MAX);
     ImGui::DragDisableCursor(scene_context.window);
+
+	ImGui::Text("Direction Transformation");
+	transformUpdated |= ImGui::DragFloat3("Direction", &direction[0], 0.01f);
+    ImGui::DragDisableCursor(scene_context.window);
+    ImGui::Spacing();
 
     ImGui::Spacing();
     ImGui::Text("Visuals");

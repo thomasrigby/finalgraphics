@@ -13,6 +13,7 @@ namespace EditorScene {
 
         // Local transformation
         glm::vec3 position;
+        glm::vec3 direction;
         bool visible = true;
         float visual_scale = 1.0f;
         // DirectionalLight and Entity will store World position
