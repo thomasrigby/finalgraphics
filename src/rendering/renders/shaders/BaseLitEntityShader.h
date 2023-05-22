@@ -58,7 +58,7 @@ protected:
     int textureScale_location{};
 
     static const uint POINT_LIGHT_BINDING = 0;
-    static const uint DIRECTIONAL_LIGHT_BINDING = 0;
+    static const uint DIRECTIONAL_LIGHT_BINDING = 1;
 
     UniformBufferArray<PointLight::Data, MAX_PL> point_lights_ubo;
     UniformBufferArray<DirectionalLight::Data, MAX_DL> directional_lights_ubo;

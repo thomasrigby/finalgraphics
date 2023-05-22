@@ -17,8 +17,8 @@ std::vector<Light> LightScene::get_nearest_lights(const std::unordered_set<std::
 
         std::vector<Light> result{};
         result.reserve(std::max(lights.size(), min_count));
-        for (const auto& point_light: lights) {
-            result.push_back(*point_light);
+        for (const auto& light: lights) {
+            result.push_back(*light);
         }
         while (result.size() < min_count) {
             result.push_back(Light::off());
@@ -31,12 +31,12 @@ std::vector<Light> LightScene::get_nearest_lights(const std::unordered_set<std::
 
     std::vector<std::pair<float, Light>> sorted_vector{};
     sorted_vector.reserve(lights.size());
-    for (const auto& point_light: lights) {
-        glm::vec3 diff = point_light->position - target;
+    for (const auto& light: lights) {
+        glm::vec3 diff = light->position - target;
         // dot(a, a) == |a|^2, but doesn't require a sqrt()
         // and since (|a| < |b|) <-> (|a|^2 < |b|^2) so sorting works with squares
         float distance_squared = glm::dot(diff, diff);
-        sorted_vector.emplace_back(distance_squared, *point_light);
+        sorted_vector.emplace_back(distance_squared, *light);
     }
 
     // Can use partial_sort to just get the `result_count` smallest, best used with smallish max_count
