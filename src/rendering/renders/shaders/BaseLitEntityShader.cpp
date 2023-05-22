@@ -24,6 +24,7 @@ void BaseLitEntityShader::get_uniforms_set_bindings() {
     set_binding("specular_map_texture", 1);
     // Uniform block bindings
     set_block_binding("PointLightArray", POINT_LIGHT_BINDING);
+    set_block_binding("DirectionalLightArray", DIRECTIONAL_LIGHT_BINDING);
 }
 
 void BaseLitEntityShader::set_instance_data(const BaseLitEntityInstanceData& instance_data) {
@@ -60,4 +61,21 @@ void BaseLitEntityShader::set_point_lights(const std::vector<PointLight>& point_
     set_frag_define("NUM_PL", Formatter() << count);
     point_lights_ubo.bind(POINT_LIGHT_BINDING);
     point_lights_ubo.upload();
+}
+
+void BaseLitEntityShader::set_directional_lights(const std::vector<DirectionalLight>& directional_lights) {
+    uint count = std::min(MAX_PL, (uint) directional_lights.size());
+
+    for (uint i = 0; i < count; i++) {
+        const DirectionalLight& directional_light = directional_lights[i];
+
+        glm::vec3 scaled_colour = glm::vec3(directional_light.colour) * directional_light.colour.a;
+
+        directional_lights_ubo.data[i].position = directional_light.position;
+        directional_lights_ubo.data[i].colour = scaled_colour;
+    }
+
+    set_frag_define("NUM_DL", Formatter() << count);
+    directional_lights_ubo.bind(DIRECTIONAL_LIGHT_BINDING);
+    directional_lights_ubo.upload();
 }

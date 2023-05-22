@@ -2,6 +2,10 @@
 #define NUM_PL 0
 #endif
 
+#ifndef NUM_DL
+#define NUM_DL 0
+#endif
+
 // Material Properties
 struct Material {
     vec3 diffuse_tint;
@@ -25,9 +29,6 @@ struct PointLightData {
 struct DirectionalLightData {
     vec3 position;
     vec3 colour;
-    vec3 direction;
-    float cutoff;
-    float attenuation;
 };
 
 // Calculations
@@ -107,7 +108,9 @@ struct LightingResult {
 LightingResult total_light_calculation(LightCalculatioData light_calculation_data, Material material
         #if NUM_PL > 0
         ,PointLightData point_lights[NUM_PL]
-        ,DirectionalLightData directional_lights[NUM_PL]
+        #endif
+        #if NUM_DL > 0
+        ,DirectionalLightData directional_lights[NUM_DL]
         #endif
     ) {
 
@@ -118,9 +121,15 @@ LightingResult total_light_calculation(LightCalculatioData light_calculation_dat
     #if NUM_PL > 0
     for (int i = 0; i < NUM_PL; i++) {
         point_light_calculation(point_lights[i], light_calculation_data, material.shininess, total_diffuse, total_specular, total_ambient);
+    }
+    #endif
+
+    #if NUM_DL > 0
+    for (int i = 0; i < NUM_DL; i++) {
         directional_light_calculation(directional_lights[i], light_calculation_data, material.shininess, total_diffuse, total_specular, total_ambient);
     }
     #endif
+    
 
     #if NUM_PL > 0
     total_ambient /= float(NUM_PL);
