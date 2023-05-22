@@ -95,12 +95,12 @@ void EditorScene::LocalTransformComponent::add_local_transform_imgui_edit_sectio
 
 glm::mat4 EditorScene::LocalTransformComponent::calc_model_matrix() const {
     
+    //utilising euler_rotation for each plane for entity rotation
+    //create 4x4 matrix for 3-D rotation on each plane
     glm::mat4 x_rotation = glm::rotate(euler_rotation.x, glm::vec3{1.0f, 0.0f, 0.0f});
     glm::mat4 y_rotation = glm::rotate(euler_rotation.y, glm::vec3{0.0f, 1.0f, 0.0f});
     glm::mat4 z_rotation = glm::rotate(euler_rotation.z, glm::vec3{0.0f, 0.0f, 1.0f});
-    glm::mat4 rotation = z_rotation * y_rotation * x_rotation;
-
-    //glm::vec3 new_Position = position + glm::vec3(0.0, 2.0, 0.0);
+    glm::mat4 rotation = x_rotation*y_rotation*z_rotation;
     return glm::translate(position) * glm::scale(scale) * rotation;
 }
 
@@ -171,7 +171,7 @@ void EditorScene::EmissiveMaterialComponent::add_emissive_material_imgui_edit_se
     ImGui::Text("Emissive Material");
 
     // Add UI controls here
-
+    
     ImGui::Spacing();
     if (material_changed) {
         update_instance_data();
